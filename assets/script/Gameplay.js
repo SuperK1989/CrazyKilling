@@ -13,6 +13,7 @@ cc.Class({
 
     properties: {
         NodePlayer:cc.Node,
+        NodeEnemy:cc.Node,
     },
 
     // LIFE-CYCLE CALLBACKS:
