@@ -12,7 +12,7 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        player:cc.Node,
+        NodePlayer:cc.Node,
     },
 
     // LIFE-CYCLE CALLBACKS:
