@@ -10,10 +10,18 @@ cc.Class({
     },
 
     onLoad() {
-        this.wLimit = cc.view.getVisibleSize().width;
-        this.hLimit = cc.view.getVisibleSize().height;
-        this.node.setPosition(0, 0);
         console.log(this.node.getPosition())
+        this.wLimit = cc.view.getFrameSize().width;
+        this.hLimit = cc.view.getFrameSize().height;
+        this.node.setPosition(0, 0);
+    },
+
+    onEnable: function () {
+        cc.director.getCollisionManager().enabled = true;
+    },
+
+    onDestroy() {
+        cc.director.getCollisionManager().enabled = false;
     },
 
     start() {
@@ -21,18 +29,29 @@ cc.Class({
     },
 
     init(gamePlay) {
-        console.log(this.node.getPosition())
-        let action = cc.moveBy(0.1, 0, 1000);
+        this.node.active = true;
+        let action = cc.moveBy(5, 0, 10000);
         this.node.runAction(action);
         this.node.scale = 2;
         this.gameplay = gamePlay;
     },
 
     update(dt) {
-        if (this.node.y > this.wLimit / 2) {
-            this.gameplay.putBulletToPoll(this.node);
-            this.node.setPosition(0, 0);
-            this.node.removeFromParent();
+        let tempNodePos = this.node.convertToWorldSpace(0, 0)
+        if (tempNodePos.y > this.hLimit || tempNodePos.y < -this.hLimit) {
+            this.putBackBullet(this.node);
         }
+    },
+
+    putBackBullet(bullet) {
+        this.gameplay.putBulletToPool(bullet);
+        bullet.setPosition(0, 0);
+        bullet.removeFromParent();
+    },
+
+    onCollisionEnter: function (contact, selfCollider, otherCollider) {
+        this.node.stopAllActions();
+        this.node.active = false;
+        this.putBackBullet(this.node);
     },
 });
