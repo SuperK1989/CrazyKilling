@@ -54,11 +54,11 @@ cc.Class({
         }
     },
 
-    putBulletToPool(node) {
+    putBulletToPool(node) {//将子弹放入子弹池
         this.bulletPool.put(node);
     },
 
-    putEnemyToPool(node) {
+    putEnemyToPool(node) {//将子弹放入子弹池
         this.enemyPool.put(node);
     },
 

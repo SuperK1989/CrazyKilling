@@ -10,7 +10,6 @@ cc.Class({
     },
 
     onLoad() {
-        console.log(this.node.getPosition())
         this.wLimit = cc.view.getFrameSize().width;
         this.hLimit = cc.view.getFrameSize().height;
         this.node.setPosition(0, 0);
