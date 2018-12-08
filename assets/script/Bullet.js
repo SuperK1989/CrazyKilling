@@ -7,6 +7,7 @@ cc.Class({
         speed: 5,
         damage: 10,
         position: (1000, 1000),
+
     },
 
     onLoad() {
@@ -30,17 +31,19 @@ cc.Class({
         this.gameplay = gamePlay;
         let startPos = gamePlay.nodePlayer.getPosition();
         let movePos = this.node.parent.convertToNodeSpaceAR(pos);
-        let normalPos = movePos.normalize();
-        let overMove = normalPos.scale(cc.v2(900, 900));
-        movePos.addSelf(overMove)
         this.node.setPosition(startPos);
+        let newPos = movePos.sub(startPos);
+        let finalPos = newPos.normalize();
         this.node.active = true;
-        let action = cc.moveTo(0.5, movePos);
-        this.node.runAction(action);
+        this.dirPos = finalPos;
         SoundManager.playSoundEffect("fire1", false);
     },
 
     update(dt) {
+        if (this.dirPos) {
+            this.node.x += this.dirPos.x * 30;
+            this.node.y += this.dirPos.y * 30;
+        }
         let tempNodePos = this.node.parent.convertToWorldSpace(this.node.getPosition())
         if (tempNodePos.y > this.hLimit || tempNodePos.y < -this.hLimit) {
             this.putBackBullet(this.node);
