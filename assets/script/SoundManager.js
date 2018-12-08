@@ -1,5 +1,6 @@
 var SoundManager = cc.Class({
     instance: null,
+    audios: null,
 
     getInstance() {
         if (this.instance == null)
@@ -8,15 +9,24 @@ var SoundManager = cc.Class({
     },
 
     loadSoundEffect() {
-        cc.loader.loadRes("sound", CallBack => {
-            console.log("loadSoundFile")
-        })
+        let self = this;
+        cc.loader.loadResDir("sound", cc.AudioClip, function (err, audioClips) {
+            self.audios = audioClips
+            if (err !== null)
+                return;
+            else
+                console.log("loadSoundFile success");
+        });
+
+
     },
 
-    playSoundEffect(index) {
-        switch (index) {
-            case "fire": {
-                break;
+    playSoundEffect(index, loop) {
+        if (this.audios == null)
+            return;
+        for (let i = 0; i < this.audios.length; i++) {
+            if (this.audios[i].name == index) {
+                cc.audioEngine.playEffect(this.audios[i], loop)
             }
         }
     }
@@ -25,4 +35,4 @@ var SoundManager = cc.Class({
 
 
 
-module.exports = SoundManager.getInstance;
+module.exports = new SoundManager

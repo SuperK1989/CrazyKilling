@@ -9,12 +9,19 @@ cc.Class({
         enemyPool: cc.NodePool,
         nodePlayer: cc.Node,
         enemyRefresh: cc.Node,
+        nodeBulletPool: cc.Node,
         enemyNum: 0,
     },
 
     // LIFE-CYCLE CALLBACKS:
 
     onLoad() {
+        console.log("FrameSize:" + cc.view.getFrameSize())
+        console.log("VisibleSize:" + cc.view.getVisibleSize())
+        this.schedule(func => {
+            console.log("FrameSize:" + cc.view.getFrameSize())
+            console.log("VisibleSize:" + cc.view.getVisibleSize())
+        }, 10)
         this.setBulletPool();
         this.setEnemyPool();
         let enemyNums = this.enemyRefresh.childrenCount;
@@ -33,16 +40,15 @@ cc.Class({
 
     },
 
-    openFire() {
+    openFire(touchPos) {
         let bullet = null;
         if (this.bulletPool.size() > 0) { // 通过 size 接口判断对象池中是否有空闲的对象
             bullet = this.bulletPool.get();
         } else { // 如果没有空闲对象，也就是对象池中备用对象不够时，我们就用 cc.instantiate 重新创建
             bullet = cc.instantiate(this.prefabBullet);
         }
-        bullet.parent = this.nodePlayer; // 将生成的敌人加入节点树
-        bullet.getComponent('Bullet').init(this); //接下来就可以调用 enemy 身上的脚本进行初始化
-        console.log(bullet.getPosition());
+        bullet.parent = this.nodeBulletPool; // 将生成的敌人加入节点树
+        bullet.getComponent('Bullet').init(this, touchPos); //接下来就可以调用 enemy 身上的脚本进行初始化
     },
 
     setBulletPool() {
@@ -94,6 +100,13 @@ cc.Class({
             }
         }
     },
+
+    touchFire(custom) {
+        let touchPos = custom.touch._point;
+        this.openFire(touchPos);
+        console.log(touchPos);
+    },
+
 
     update(dt) {
 

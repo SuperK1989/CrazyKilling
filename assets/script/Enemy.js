@@ -1,3 +1,4 @@
+var SoundManager = require('SoundManager')
 cc.Class({
     extends: cc.Component,
 
@@ -41,6 +42,7 @@ cc.Class({
 
     onCollisionEnter: function (selfCollider, otherCollider) {
         this.boom.node.active = true;
+        SoundManager.playSoundEffect("boom1", false);
         this.node.stopAllActions();
         this.collision.enabled = false;
         let fadeOut = cc.fadeOut(0.5);

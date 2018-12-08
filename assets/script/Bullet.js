@@ -1,4 +1,4 @@
-
+var SoundManager = require('SoundManager')
 cc.Class({
     extends: cc.Component,
 
@@ -12,7 +12,6 @@ cc.Class({
     onLoad() {
         this.wLimit = cc.view.getFrameSize().width;
         this.hLimit = cc.view.getFrameSize().height;
-        this.node.setPosition(0, 0);
     },
 
     onEnable: function () {
@@ -27,16 +26,22 @@ cc.Class({
 
     },
 
-    init(gamePlay) {
-        this.node.active = true;
-        let action = cc.moveBy(5, 0, 10000);
-        this.node.runAction(action);
-        this.node.scale = 2;
+    init(gamePlay, pos) {
         this.gameplay = gamePlay;
+        let startPos = gamePlay.nodePlayer.getPosition();
+        let movePos = this.node.parent.convertToNodeSpaceAR(pos);
+        let normalPos = movePos.normalize();
+        let overMove = normalPos.scale(cc.v2(900, 900));
+        movePos.addSelf(overMove)
+        this.node.setPosition(startPos);
+        this.node.active = true;
+        let action = cc.moveTo(0.5, movePos);
+        this.node.runAction(action);
+        SoundManager.playSoundEffect("fire1", false);
     },
 
     update(dt) {
-        let tempNodePos = this.node.convertToWorldSpace(0, 0)
+        let tempNodePos = this.node.parent.convertToWorldSpace(this.node.getPosition())
         if (tempNodePos.y > this.hLimit || tempNodePos.y < -this.hLimit) {
             this.putBackBullet(this.node);
         }
