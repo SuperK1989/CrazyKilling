@@ -28,13 +28,21 @@ cc.Class({
     },
 
     init(gamePlay, pos) {
-        this.gameplay = gamePlay;
+        this.gameplay = gamePlay;//变换坐标，计算子弹飞出时的向量
         let startPos = gamePlay.nodePlayer.getPosition();
         let movePos = this.node.parent.convertToNodeSpaceAR(pos);
         this.node.setPosition(startPos);
         let newPos = movePos.sub(startPos);
         let finalPos = newPos.normalize();
         this.node.active = true;
+
+        let changeX = movePos.x - startPos.x;//修改炮台子弹的rotation
+        let changeY = movePos.y - startPos.y;
+        let rota = Math.atan(changeX / changeY);
+        let rotation = rota * 180 / Math.PI;
+        this.node.rotation = rotation;
+        gamePlay.nodePlayer.rotation = rotation;
+
         this.dirPos = finalPos;
         SoundManager.playSoundEffect("fire1", false);
     },
