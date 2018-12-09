@@ -40,6 +40,8 @@ cc.Class({
         let changeY = movePos.y - startPos.y;
         let rota = Math.atan(changeX / changeY);
         let rotation = rota * 180 / Math.PI;
+        if (changeY <= 0)
+            rotation = 180 + rotation;
         this.node.rotation = rotation;
         gamePlay.nodePlayer.rotation = rotation;
 
