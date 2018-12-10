@@ -10,11 +10,11 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad() {
-        SoundManager.loadSoundEffect();
+        // SoundManager.loadSoundEffect();
     },
 
     start() {
-        SoundManager.playSoundEffect("bgm1", true);
+        // SoundManager.playSoundEffect("bgm1", true);
     },
 
     // update (dt) {},

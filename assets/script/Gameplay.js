@@ -22,9 +22,11 @@ cc.Class({
             console.log("FrameSize:" + cc.view.getFrameSize())
             console.log("VisibleSize:" + cc.view.getVisibleSize())
         }, 10)
+
         this.setBulletPool();
         this.setEnemyPool();
-        let enemyNums = this.enemyRefresh.childrenCount;
+
+        let enemyNums = this.enemyRefresh.childrenCount;//刷怪
         this.schedule(callBack => {
             if (enemyNums < 10) {
                 this.loadEnemy()

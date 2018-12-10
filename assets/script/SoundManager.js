@@ -2,21 +2,33 @@ var SoundManager = cc.Class({
     instance: null,
     audios: null,
 
-    getInstance() {
-        if (this.instance == null)
-            this.instance = new SoundManager;
-        return this.instance;
-    },
+    // ctor() {
+    //     this.SoundMana = new SoundManager(this);
+    // },
 
-    loadSoundEffect() {
+
+    // getInstance() {
+    //     if (this.instance == null)
+    //         this.instance = new SoundManager;
+    //     return this.instance;
+    // },
+
+    loadSoundEffect(index, loop) {
         let self = this;
-        cc.loader.loadResDir("sound", cc.AudioClip, function (err, audioClips) {
-            self.audios = audioClips
-            if (err !== null)
-                return;
-            else
-                console.log("loadSoundFile success");
-        });
+        if (this.audios == null) {
+            cc.loader.loadResDir("sound", cc.AudioClip, function (err, audioClips) {
+                if (err !== null) {
+                    console.log(err);
+                    return;
+                }
+                else
+                    console.log("loadSoundFile success");
+                self.audios = audioClips
+                self.playSoundEffect(index, loop);
+            })
+        } else {
+            this.playSoundEffect(index, loop);
+        }
 
 
     },
