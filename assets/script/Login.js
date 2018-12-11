@@ -22,6 +22,7 @@ cc.Class({
     },
 
     gameBegin() {
+        SoundManager.loadSoundEffect("button", false);
         cc.director.loadScene("MainScenes");
     }
 

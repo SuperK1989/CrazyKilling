@@ -10,6 +10,9 @@ cc.Class({
         nodePlayer: cc.Node,
         enemyRefresh: cc.Node,
         nodeBulletPool: cc.Node,
+        nodeGameOver: cc.Node,
+        playerScore: cc.Label,
+        gameOverScore: cc.Label,
         enemyNum: 0,
     },
 
@@ -18,7 +21,7 @@ cc.Class({
     onLoad() {
         console.log("FrameSize:" + cc.view.getFrameSize())
         console.log("VisibleSize:" + cc.view.getVisibleSize())
-        this.schedule(func => {
+        this.scheduleOnce(func => {
             console.log("FrameSize:" + cc.view.getFrameSize())
             console.log("VisibleSize:" + cc.view.getVisibleSize())
         }, 10)
@@ -32,10 +35,14 @@ cc.Class({
                 this.loadEnemy()
             }
         }, 1, cc.macro.REPEAT_FOREVER, 2)
+
+        this.playerScore.string = 0;
+        this.gameOverScore.string = 0;
     },
 
     onEnable: function () {
         cc.director.getCollisionManager().enabled = true;
+
     },
 
     start() {
@@ -103,10 +110,14 @@ cc.Class({
         }
     },
 
+    gameRestart() {
+        cc.director.loadScene("PlayerLogin");
+        cc.audioEngine.stopAll();
+    },
+
     touchFire(custom) {
         let touchPos = custom.touch._point;
         this.openFire(touchPos);
-        console.log(touchPos);
     },
 
 

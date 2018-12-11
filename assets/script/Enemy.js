@@ -41,16 +41,30 @@ cc.Class({
     },
 
     onCollisionEnter: function (selfCollider, otherCollider) {
-        this.boom.node.active = true;
-        SoundManager.playSoundEffect("boom1", false);
-        this.node.stopAllActions();
-        this.collision.enabled = false;
-        let fadeOut = cc.fadeOut(0.5);
-        this.node.runAction(fadeOut)
-        this.scheduleOnce(callBack => {
-            this.node.active = false;
-            this.putEnemyBackToPool(this.node)
-        }, 1)
+        switch (selfCollider.node.name) {
+            case "bullet": {
+                this.boom.node.active = true;
+                SoundManager.playSoundEffect("boom1", false);
+                this.node.stopAllActions();
+                this.collision.enabled = false;
+                let fadeOut = cc.fadeOut(0.5);
+                this.node.runAction(fadeOut)
+                this.scheduleOnce(callBack => {
+                    this.node.active = false;
+                    this.putEnemyBackToPool(this.node)
+                }, 1)
+                break;
+            }
+
+            case "sp_player": {
+                this.gamePlay.nodeGameOver.active = true;
+                this.gamePlay.gameOverScore.string = this.gamePlay.playerScore.string;
+                this.gamePlay.getComponent("Gameplay").unschedule(callBack => {
+                    console.log("unschedule success")
+                })
+                break;
+            }
+        }
 
     },
 

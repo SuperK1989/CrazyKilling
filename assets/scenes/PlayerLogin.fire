@@ -41,8 +41,8 @@
     },
     "_scale": {
       "__type__": "cc.Vec3",
-      "x": 0.4586458333333333,
-      "y": 0.4586458333333333,
+      "x": 0.7554731768810672,
+      "y": 0.7554731768810672,
       "z": 1
     },
     "_quat": {
@@ -520,7 +520,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 164,
+      "width": 84.94,
       "height": 45
     },
     "_anchorPoint": {
@@ -566,8 +566,8 @@
     "_srcBlendFactor": 1,
     "_dstBlendFactor": 771,
     "_useOriginalSize": false,
-    "_string": "开始游戏",
-    "_N$string": "开始游戏",
+    "_string": "Strat",
+    "_N$string": "Strat",
     "_fontSize": 40,
     "_lineHeight": 45,
     "_enableWrapText": true,
@@ -788,7 +788,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 164,
+      "width": 161.19,
       "height": 45
     },
     "_anchorPoint": {
@@ -834,8 +834,8 @@
     "_srcBlendFactor": 1,
     "_dstBlendFactor": 771,
     "_useOriginalSize": false,
-    "_string": "退出游戏",
-    "_N$string": "退出游戏",
+    "_string": "MoreInfo",
+    "_N$string": "MoreInfo",
     "_fontSize": 40,
     "_lineHeight": 45,
     "_enableWrapText": true,

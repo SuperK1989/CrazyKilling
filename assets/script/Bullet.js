@@ -67,6 +67,8 @@ cc.Class({
     },
 
     onCollisionEnter: function (contact, selfCollider, otherCollider) {
+        let num = this.gameplay.playerScore.string
+        this.gameplay.playerScore.string = parseInt(num) + 1;
         this.node.stopAllActions();
         this.node.active = false;
         this.putBackBullet(this.node);
