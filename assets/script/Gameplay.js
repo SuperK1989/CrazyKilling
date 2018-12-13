@@ -1,4 +1,5 @@
 var addAction = require('ObjAni')
+var SoundManager = require('SoundManager')
 cc.Class({
     extends: cc.Component,
 
@@ -11,6 +12,7 @@ cc.Class({
         enemyRefresh: cc.Node,
         nodeBulletPool: cc.Node,
         nodeGameOver: cc.Node,
+        nodeStickArea: cc.Node,
         playerScore: cc.Label,
         gameOverScore: cc.Label,
         enemyNum: 0,
@@ -28,6 +30,10 @@ cc.Class({
 
         this.setBulletPool();
         this.setEnemyPool();
+
+        this.nodeStickArea.on("touchstart", this.stickCtrl, this)
+        this.nodeStickArea.on("touchmove", this.stickCtrl, this)
+        this.nodeStickArea.on("touchend", this.stickCtrl, this)
 
         let enemyNums = this.enemyRefresh.childrenCount;//刷怪
         this.schedule(callBack => {
@@ -118,6 +124,26 @@ cc.Class({
     touchFire(custom) {
         let touchPos = custom.touch._point;
         this.openFire(touchPos);
+    },
+
+    stickCtrl(custom) {
+        switch (custom.type) {
+            case "touchstart": {
+                console.log("touchstart")
+                break;
+            }
+
+            case "touchmove": {
+                console.log("touchmove")
+                break;
+            }
+
+            case "touchend": {
+                console.log("touchend")
+                break;
+            }
+        }
+        console.log(custom);
     },
 
 
