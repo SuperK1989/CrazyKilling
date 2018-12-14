@@ -14,6 +14,7 @@ cc.Class({
         nodeGameOver: cc.Node,
         nodeStickArea: cc.Node,
         nodeJoyStick: cc.Node,
+        nodeMoveStick: cc.Node,
         nodePause: cc.Node,
         nodeResume: cc.Node,
         nodePauseBg: cc.Node,
@@ -26,6 +27,9 @@ cc.Class({
             default: null,
         },
 
+        playerMove: false,
+        playerSpeed: 1,
+        playerMoveDir: cc.v2,
         enemyNum: 0,
     },
 
@@ -164,22 +168,39 @@ cc.Class({
                 let location = custom.getLocation();
                 let handleLo = this.nodeStickArea.convertToNodeSpaceAR(location);
                 this.nodeJoyStick.setPosition(handleLo);
-                console.log(location)
                 break;
             }
 
             case "touchmove": {
-                console.log("touchmove")
+                let touchPos = custom.getLocation();
+                let nodeTouchPos = this.nodeJoyStick.convertToNodeSpaceAR(touchPos);
+                let moveStickdis = Math.sqrt(Math.pow(nodeTouchPos.x, 2) + Math.pow(nodeTouchPos.y, 2))
+                var radius = this.nodeJoyStick.width / 2;
+                if (moveStickdis < radius) {
+                    this.nodeMoveStick.setPosition(nodeTouchPos);
+                    let sPos = nodeTouchPos.normalize();
+                    this.playerMoveDir = sPos;
+                    this.playerMove = true;
+                }
+                else {
+                    var x = Math.cos(this.getRadian(nodeTouchPos)) * radius;
+                    var y = Math.sin(this.getRadian(nodeTouchPos)) * radius;
+                    this.nodeMoveStick.setPosition(cc.v2(x, y));
+                    let sPos = cc.v2(x, y).normalize();
+                    this.playerMoveDir = sPos;
+                    this.playerMove = true;
+                }
                 break;
             }
 
             case "touchend": {
+                this.playerMove = false;
                 this.nodeJoyStick.active = false;
-                console.log("touchend")
+                this.nodeMoveStick.setPosition(0, 0);
                 break;
             }
         }
-        console.log(custom);
+
     },
 
     stopMove(control) {
@@ -203,8 +224,21 @@ cc.Class({
         }
     },
 
+    getRadian(point) {
+        let radian = Math.PI / 180 * this.getAngle(point);
+        return radian;
+    },
+
+    getAngle(point) {
+        let angle = Math.atan2(point.y, point.x) * 180 / Math.PI;
+        return angle;
+    },
+
 
     update(dt) {
-
+        if (this.playerMove) {
+            this.nodePlayer.x += this.playerMoveDir.x * this.playerSpeed;
+            this.nodePlayer.y += this.playerMoveDir.y * this.playerSpeed;
+        }
     },
 });
