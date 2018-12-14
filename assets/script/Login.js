@@ -4,7 +4,10 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-
+        btn_sound: {
+            type: cc.AudioClip,
+            default: null,
+        }
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -22,7 +25,7 @@ cc.Class({
     },
 
     gameBegin() {
-        SoundManager.loadSoundEffect("button", false);
+        cc.audioEngine.play(this.btn_sound, false)
         cc.director.loadScene("MainScenes");
     }
 

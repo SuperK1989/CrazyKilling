@@ -13,8 +13,19 @@ cc.Class({
         nodeBulletPool: cc.Node,
         nodeGameOver: cc.Node,
         nodeStickArea: cc.Node,
+        nodeJoyStick: cc.Node,
+        nodePause: cc.Node,
+        nodeResume: cc.Node,
+        nodePauseBg: cc.Node,
+        nodeCanvas: cc.Node,
         playerScore: cc.Label,
         gameOverScore: cc.Label,
+
+        btn_sound: {
+            type: cc.AudioClip,
+            default: null,
+        },
+
         enemyNum: 0,
     },
 
@@ -35,12 +46,8 @@ cc.Class({
         this.nodeStickArea.on("touchmove", this.stickCtrl, this)
         this.nodeStickArea.on("touchend", this.stickCtrl, this)
 
-        let enemyNums = this.enemyRefresh.childrenCount;//刷怪
-        this.schedule(callBack => {
-            if (enemyNums < 10) {
-                this.loadEnemy()
-            }
-        }, 1, cc.macro.REPEAT_FOREVER, 2)
+
+        this.schedule(this.refreshEnemy, 1, cc.macro.REPEAT_FOREVER, 2)
 
         this.playerScore.string = 0;
         this.gameOverScore.string = 0;
@@ -121,6 +128,30 @@ cc.Class({
         cc.audioEngine.stopAll();
     },
 
+    gamePause(custom) {
+        switch (custom.target.name) {
+            case "btn_pause": {
+                cc.audioEngine.play(this.btn_sound, false);
+                this.unschedule(this.refreshEnemy);
+                this.nodePause.active = false;
+                this.nodeResume.active = true;
+                this.nodePauseBg.active = true;
+                this.stopMove(false);
+                break;
+            }
+
+            case "btn_resume": {
+                cc.audioEngine.play(this.btn_sound, false);
+                this.schedule(this.refreshEnemy, 1, cc.macro.REPEAT_FOREVER, 2);
+                this.nodePause.active = true;
+                this.nodeResume.active = false;
+                this.nodePauseBg.active = false;
+                this.stopMove(true);
+                break;
+            }
+        }
+    },
+
     touchFire(custom) {
         let touchPos = custom.touch._point;
         this.openFire(touchPos);
@@ -129,7 +160,11 @@ cc.Class({
     stickCtrl(custom) {
         switch (custom.type) {
             case "touchstart": {
-                console.log("touchstart")
+                this.nodeJoyStick.active = true;
+                let location = custom.getLocation();
+                let handleLo = this.nodeStickArea.convertToNodeSpaceAR(location);
+                this.nodeJoyStick.setPosition(handleLo);
+                console.log(location)
                 break;
             }
 
@@ -139,11 +174,33 @@ cc.Class({
             }
 
             case "touchend": {
+                this.nodeJoyStick.active = false;
                 console.log("touchend")
                 break;
             }
         }
         console.log(custom);
+    },
+
+    stopMove(control) {
+        var childrenBuCont = this.nodeBulletPool.childrenCount;
+        for (let i = 0; i < childrenBuCont; i++) {
+            let scri = this.nodeBulletPool.children[i].getComponent("Bullet")
+            scri.pauseFlag = control;
+        }
+
+        var childrenEnCont = this.enemyRefresh.childrenCount;
+        for (let i = 0; i < childrenEnCont; i++) {
+            let scri = this.enemyRefresh.children[i].getComponent("Enemy")
+            scri.pauseFlag = control;
+        }
+    },
+
+    refreshEnemy() {
+        let enemyNums = this.enemyRefresh.childrenCount;//刷怪
+        if (enemyNums < 10) {
+            this.loadEnemy()
+        }
     },
 
 

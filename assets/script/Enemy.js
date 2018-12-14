@@ -6,6 +6,9 @@ cc.Class({
         collision: cc.BoxCollider,
         boom: cc.ParticleSystem,
         nodeCollider: cc.Node,
+        enemyspeed: 1,
+        pauseFlag: true,
+        enemyType: null,
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -16,7 +19,9 @@ cc.Class({
         this.boom.resetSystem();
         let reFreshX = 1334 * Math.random();
         let reFreshY = 750 * Math.random();
-        this.node.setPosition(reFreshX, reFreshY);
+        let randomPosition = cc.v2(reFreshX, reFreshY)
+        let turnPosition = this.node.parent.convertToNodeSpaceAR(randomPosition)
+        this.node.setPosition(turnPosition);
     },
 
     onEnable: function () {
@@ -35,9 +40,6 @@ cc.Class({
         let fadeIn = cc.fadeIn(0.5);
         this.node.runAction(fadeIn);
         this.gamePlay = gamePlay;
-        let destination = gamePlay.nodePlayer.getPosition();
-        let action = cc.moveTo(5, destination);
-        this.node.runAction(action);
     },
 
     onCollisionEnter: function (selfCollider, otherCollider) {
@@ -73,5 +75,22 @@ cc.Class({
         enemy.removeFromParent();
     },
 
-    // update (dt) {},
+    update(dt) {
+        if (this.pauseFlag) {
+            var charactor = this.gamePlay.nodePlayer;
+            var charactorPos = charactor.getPosition();
+            var turnWorldPos = charactor.parent.convertToWorldSpaceAR(charactorPos);
+            var turnPos = this.node.parent.convertToNodeSpaceAR(turnWorldPos);
+            var movePos = turnPos.sub(this.node.getPosition());
+            var handlePos = movePos.normalize();
+
+            this.node.x += handlePos.x * this.enemyspeed;
+            this.node.y += handlePos.y * this.enemyspeed;
+
+        }
+    },
+
+    enemyMove() {
+
+    },
 });

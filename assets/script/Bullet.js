@@ -7,6 +7,7 @@ cc.Class({
         speed: 5,
         damage: 10,
         position: (1000, 1000),
+        pauseFlag: true,
 
     },
 
@@ -50,13 +51,15 @@ cc.Class({
     },
 
     update(dt) {
-        if (this.dirPos) {
-            this.node.x += this.dirPos.x * 30;
-            this.node.y += this.dirPos.y * 30;
-        }
-        let tempNodePos = this.node.parent.convertToWorldSpace(this.node.getPosition())
-        if (tempNodePos.y > this.hLimit || tempNodePos.y < -this.hLimit) {
-            this.putBackBullet(this.node);
+        if (this.pauseFlag) {
+            if (this.dirPos) {
+                this.node.x += this.dirPos.x * 30;
+                this.node.y += this.dirPos.y * 30;
+            }
+            let tempNodePos = this.node.parent.convertToWorldSpace(this.node.getPosition())
+            if (tempNodePos.y > this.hLimit || tempNodePos.y < -this.hLimit) {
+                this.putBackBullet(this.node);
+            }
         }
     },
 
