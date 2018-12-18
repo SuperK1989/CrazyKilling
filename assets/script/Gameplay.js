@@ -36,6 +36,9 @@ cc.Class({
         fireDir: cc.v2,
         fireTemp: false,
         enemyNum: 0,
+
+        visibalW: 0,
+        visibalH: 0,
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -43,6 +46,15 @@ cc.Class({
     onLoad() {
         console.log("FrameSize:" + cc.view.getFrameSize())
         console.log("VisibleSize:" + cc.view.getVisibleSize())
+        let visibalSize = cc.view.getVisibleSize();
+        if (visibalSize.width > 1334) {
+            this.visibalW = 1334 / 2;
+            this.visibalH = visibalSize.height / 2;
+        }
+        else {
+            this.visibalW = visibalSize.width / 2;
+            this.visibalH = visibalSize.height / 2;
+        }
         this.scheduleOnce(func => {
             console.log("FrameSize:" + cc.view.getFrameSize())
             console.log("VisibleSize:" + cc.view.getVisibleSize())
@@ -60,7 +72,7 @@ cc.Class({
         this.nodeFireArea.on("touchend", this.fireCtrl, this)
 
 
-        // this.schedule(this.refreshEnemy, 1, cc.macro.REPEAT_FOREVER, 2)
+        this.schedule(this.refreshEnemy, 1, cc.macro.REPEAT_FOREVER, 2)
         this.schedule(this.openFire, 1)
 
 
@@ -237,7 +249,7 @@ cc.Class({
                     this.nodeFireStick.setPosition(nodeTouchPos);
                     let sPos = nodeTouchPos.normalize();
 
-                    let fireDir = this.nodeBulletPool.convertToNodeSpaceAR(sPos);
+                    // let fireDir = this.nodeBulletPool.convertToNodeSpaceAR(sPos);
                     this.nodePlayer.rotation = this.posToRotation(sPos);
 
                 }
@@ -246,9 +258,7 @@ cc.Class({
                     var y = Math.sin(this.getRadian(nodeTouchPos)) * radius;
                     this.nodeFireStick.setPosition(cc.v2(x, y));
                     let sPos = cc.v2(x, y).normalize();
-                    let fireDir = this.nodeBulletPool.convertToNodeSpaceAR(sPos);
-                    // this.fireDir = fireDir;
-                    // this.playerMoveDir = sPos;
+                    // let fireDir = this.nodeBulletPool.convertToNodeSpaceAR(sPos);
                     this.nodePlayer.rotation = this.posToRotation(sPos);
 
                 }
@@ -306,6 +316,14 @@ cc.Class({
 
     update(dt) {
         if (this.playerMove) {
+            if (this.nodePlayer.x >= this.visibalW)
+                this.nodePlayer.x = this.visibalW;
+            if (this.nodePlayer.x <= -this.visibalW)
+                this.nodePlayer.x = -this.visibalW;
+            if (this.nodePlayer.y >= this.visibalH)
+                this.nodePlayer.y = this.visibalH;
+            if (this.nodePlayer.y <= -this.visibalH)
+                this.nodePlayer.y = -this.visibalH;
             this.nodePlayer.x += this.playerMoveDir.x * this.playerSpeed;
             this.nodePlayer.y += this.playerMoveDir.y * this.playerSpeed;
         }

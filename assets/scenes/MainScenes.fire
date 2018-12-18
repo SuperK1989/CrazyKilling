@@ -966,7 +966,7 @@
       }
     ],
     "_prefab": null,
-    "_opacity": 255,
+    "_opacity": 125,
     "_color": {
       "__type__": "cc.Color",
       "r": 255,
@@ -1209,7 +1209,7 @@
       }
     ],
     "_prefab": null,
-    "_opacity": 255,
+    "_opacity": 125,
     "_color": {
       "__type__": "cc.Color",
       "r": 255,
@@ -2686,6 +2686,7 @@
     "playerSpeed": 5,
     "playerMoveDir": null,
     "fireDir": null,
+    "fireTemp": false,
     "enemyNum": 0,
     "_id": "dfhI4JfTFFzrxF0KVevgen"
   },
