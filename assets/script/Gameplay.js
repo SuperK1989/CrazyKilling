@@ -15,6 +15,9 @@ cc.Class({
         nodeStickArea: cc.Node,
         nodeJoyStick: cc.Node,
         nodeMoveStick: cc.Node,
+        nodeFireArea: cc.Node,
+        nodeFireBg: cc.Node,
+        nodeFireStick: cc.Node,
         nodePause: cc.Node,
         nodeResume: cc.Node,
         nodePauseBg: cc.Node,
@@ -29,7 +32,9 @@ cc.Class({
 
         playerMove: false,
         playerSpeed: 1,
-        playerMoveDir: cc.v2,
+        playerMoveDir: cc.v2(0, 0),
+        fireDir: cc.v2,
+        fireTemp: false,
         enemyNum: 0,
     },
 
@@ -50,8 +55,14 @@ cc.Class({
         this.nodeStickArea.on("touchmove", this.stickCtrl, this)
         this.nodeStickArea.on("touchend", this.stickCtrl, this)
 
+        this.nodeFireArea.on("touchstart", this.fireCtrl, this)
+        this.nodeFireArea.on("touchmove", this.fireCtrl, this)
+        this.nodeFireArea.on("touchend", this.fireCtrl, this)
 
-        this.schedule(this.refreshEnemy, 1, cc.macro.REPEAT_FOREVER, 2)
+
+        // this.schedule(this.refreshEnemy, 1, cc.macro.REPEAT_FOREVER, 2)
+        this.schedule(this.openFire, 1)
+
 
         this.playerScore.string = 0;
         this.gameOverScore.string = 0;
@@ -66,15 +77,17 @@ cc.Class({
 
     },
 
-    openFire(touchPos) {
-        let bullet = null;
-        if (this.bulletPool.size() > 0) { // 通过 size 接口判断对象池中是否有空闲的对象
-            bullet = this.bulletPool.get();
-        } else { // 如果没有空闲对象，也就是对象池中备用对象不够时，我们就用 cc.instantiate 重新创建
-            bullet = cc.instantiate(this.prefabBullet);
+    openFire() {
+        if (this.fireTemp) {
+            let bullet = null;
+            if (this.bulletPool.size() > 0) { // 通过 size 接口判断对象池中是否有空闲的对象
+                bullet = this.bulletPool.get();
+            } else { // 如果没有空闲对象，也就是对象池中备用对象不够时，我们就用 cc.instantiate 重新创建
+                bullet = cc.instantiate(this.prefabBullet);
+            }
+            bullet.parent = this.nodeBulletPool; // 将生成的敌人加入节点树
+            bullet.getComponent('Bullet').init(this, this.nodePlayer.rotation); //接下来就可以调用 enemy 身上的脚本进行初始化
         }
-        bullet.parent = this.nodeBulletPool; // 将生成的敌人加入节点树
-        bullet.getComponent('Bullet').init(this, touchPos); //接下来就可以调用 enemy 身上的脚本进行初始化
     },
 
     setBulletPool() {
@@ -203,6 +216,62 @@ cc.Class({
 
     },
 
+    fireCtrl(custom) {
+        switch (custom.type) {
+            case "touchstart": {
+                this.nodeFireBg.active = true;
+                let location = custom.getLocation();
+                let handleLo = this.nodeFireArea.convertToNodeSpaceAR(location);
+                this.nodeFireBg.setPosition(handleLo);
+                this.fireTemp = true;
+
+                break;
+            }
+
+            case "touchmove": {
+                let touchPos = custom.getLocation();
+                let nodeTouchPos = this.nodeFireBg.convertToNodeSpaceAR(touchPos);
+                let moveStickdis = Math.sqrt(Math.pow(nodeTouchPos.x, 2) + Math.pow(nodeTouchPos.y, 2))
+                var radius = this.nodeFireBg.width / 2;
+                if (moveStickdis < radius) {
+                    this.nodeFireStick.setPosition(nodeTouchPos);
+                    let sPos = nodeTouchPos.normalize();
+
+                    let fireDir = this.nodeBulletPool.convertToNodeSpaceAR(sPos);
+                    this.nodePlayer.rotation = this.posToRotation(sPos);
+
+                }
+                else {
+                    var x = Math.cos(this.getRadian(nodeTouchPos)) * radius;
+                    var y = Math.sin(this.getRadian(nodeTouchPos)) * radius;
+                    this.nodeFireStick.setPosition(cc.v2(x, y));
+                    let sPos = cc.v2(x, y).normalize();
+                    let fireDir = this.nodeBulletPool.convertToNodeSpaceAR(sPos);
+                    // this.fireDir = fireDir;
+                    // this.playerMoveDir = sPos;
+                    this.nodePlayer.rotation = this.posToRotation(sPos);
+
+                }
+                break;
+            }
+
+            case "touchend": {
+                this.nodeFireBg.active = false;
+                this.nodeFireStick.setPosition(0, 0);
+                this.fireTemp = false;
+                break;
+            }
+        }
+    },
+
+    posToRotation(pos) {
+        let rota = Math.atan(pos.x / pos.y);
+        let rotation = rota * 180 / Math.PI;
+        if (pos.y <= 0)
+            rotation = 180 + rotation;
+        return rotation;
+    },
+
     stopMove(control) {
         var childrenBuCont = this.nodeBulletPool.childrenCount;
         for (let i = 0; i < childrenBuCont; i++) {
@@ -240,5 +309,7 @@ cc.Class({
             this.nodePlayer.x += this.playerMoveDir.x * this.playerSpeed;
             this.nodePlayer.y += this.playerMoveDir.y * this.playerSpeed;
         }
+
+
     },
 });
