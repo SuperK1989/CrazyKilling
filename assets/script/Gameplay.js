@@ -1,15 +1,19 @@
 var addAction = require('ObjAni')
 var SoundManager = require('SoundManager')
+var conf = require('initConf')
 cc.Class({
     extends: cc.Component,
 
     properties: {
         prefabBullet: cc.Prefab,
-        prefabEnemy: cc.Prefab,
+        prefabEnemy: [cc.Prefab],
         bulletPool: cc.NodePool,
         enemyPool: cc.NodePool,
         nodePlayer: cc.Node,
-        enemyRefresh: cc.Node,
+        enemyRefresh: {
+            type: [cc.Node],
+            default: [],
+        },
         nodeBulletPool: cc.Node,
         nodeGameOver: cc.Node,
         nodeStickArea: cc.Node,
@@ -44,8 +48,6 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad() {
-        console.log("FrameSize:" + cc.view.getFrameSize())
-        console.log("VisibleSize:" + cc.view.getVisibleSize())
         let visibalSize = cc.view.getVisibleSize();
         if (visibalSize.width > 1334) {
             this.visibalW = 1334 / 2;
@@ -58,7 +60,7 @@ cc.Class({
         this.scheduleOnce(func => {
             console.log("FrameSize:" + cc.view.getFrameSize())
             console.log("VisibleSize:" + cc.view.getVisibleSize())
-        }, 10)
+        }, 3)
 
         this.setBulletPool();
         this.setEnemyPool();
@@ -104,10 +106,19 @@ cc.Class({
 
     setBulletPool() {
         this.bulletPool = new cc.NodePool();
-        let initCount = 15;
+        let initCount = 20;
         for (let i = 0; i < initCount; ++i) {
             let bullet = cc.instantiate(this.prefabBullet); // 创建节点
             this.bulletPool.put(bullet); // 通过 putInPool 接口放入对象池
+        }
+    },
+
+    setEnemyPool() {
+        this.enemyPool = new cc.NodePool();
+        let initCount = 20;
+        for (let i = 0; i < initCount; ++i) {
+            let enemy = cc.instantiate(this.prefabEnemy[0]); // 创建节点
+            this.enemyPool.put(enemy); // 通过 putInPool 接口放入对象池
         }
     },
 
@@ -130,26 +141,9 @@ cc.Class({
         enemy.getComponent('Enemy').init(this); //接下来就可以调用 enemy 身上的脚本进行初始化
     },
 
-    setEnemyPool() {
-        this.enemyPool = new cc.NodePool();
-        let initCount = 15;
-        for (let i = 0; i < initCount; ++i) {
-            let enemy = cc.instantiate(this.prefabEnemy); // 创建节点
-            this.enemyPool.put(enemy); // 通过 putInPool 接口放入对象池
-        }
-    },
-
-    rotationChange(custom) {
-        switch (custom.target.name) {
-            case "fanhuiLeft": {
-                this.nodePlayer.rotation -= 10;
-                break;
-            }
-            case "fanhuiRight": {
-                this.nodePlayer.rotation += 10;
-                break;
-            }
-        }
+    refreshEnemy() {//type,num,config
+        let stageNum = conf.stageConfig;
+        console.log(stageNum);
     },
 
     gameRestart() {
@@ -181,10 +175,6 @@ cc.Class({
         }
     },
 
-    touchFire(custom) {
-        let touchPos = custom.touch._point;
-        this.openFire(touchPos);
-    },
 
     stickCtrl(custom) {
         switch (custom.type) {
@@ -248,8 +238,6 @@ cc.Class({
                 if (moveStickdis < radius) {
                     this.nodeFireStick.setPosition(nodeTouchPos);
                     let sPos = nodeTouchPos.normalize();
-
-                    // let fireDir = this.nodeBulletPool.convertToNodeSpaceAR(sPos);
                     this.nodePlayer.rotation = this.posToRotation(sPos);
 
                 }
@@ -258,7 +246,6 @@ cc.Class({
                     var y = Math.sin(this.getRadian(nodeTouchPos)) * radius;
                     this.nodeFireStick.setPosition(cc.v2(x, y));
                     let sPos = cc.v2(x, y).normalize();
-                    // let fireDir = this.nodeBulletPool.convertToNodeSpaceAR(sPos);
                     this.nodePlayer.rotation = this.posToRotation(sPos);
 
                 }
@@ -296,12 +283,6 @@ cc.Class({
         }
     },
 
-    refreshEnemy() {
-        let enemyNums = this.enemyRefresh.childrenCount;//刷怪
-        if (enemyNums < 10) {
-            this.loadEnemy()
-        }
-    },
 
     getRadian(point) {
         let radian = Math.PI / 180 * this.getAngle(point);

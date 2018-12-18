@@ -14,8 +14,7 @@ cc.Class({
     },
 
     onLoad() {
-        // this.wLimit = cc.view.getFrameSize().width;
-        // this.visibalH = cc.view.getFrameSize().height;
+
     },
 
     onEnable: function () {
@@ -59,7 +58,7 @@ cc.Class({
             } else if (tempNodePos.x > this.visibalW || tempNodePos.x < -this.visibalW)
                 this.putBackBullet(this.node);
         }
-        console.log(this.visibalH, this.visibalW)
+
     },
 
     putBackBullet(bullet) {

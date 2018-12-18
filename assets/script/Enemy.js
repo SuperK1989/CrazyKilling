@@ -6,9 +6,11 @@ cc.Class({
         collision: cc.BoxCollider,
         boom: cc.ParticleSystem,
         nodeCollider: cc.Node,
-        enemyspeed: 1,
         pauseFlag: true,
         enemyType: null,
+
+        enemyBlood: 10,
+        enemyspeed: 1,
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -50,20 +52,19 @@ cc.Class({
                 this.node.stopAllActions();
                 this.collision.enabled = false;
                 let fadeOut = cc.fadeOut(0.5);
-                this.node.runAction(fadeOut)
+                this.node.runAction(fadeOut);
                 this.scheduleOnce(callBack => {
-                    this.node.active = false;
                     this.putEnemyBackToPool(this.node)
+                    this.node.active = false;
                 }, 1)
+                console.log(this.gamePlay.enemyRefresh.childrenCount)
                 break;
             }
 
             case "sp_player": {
                 this.gamePlay.nodeGameOver.active = true;
                 this.gamePlay.gameOverScore.string = this.gamePlay.playerScore.string;
-                this.gamePlay.getComponent("Gameplay").unschedule(callBack => {
-                    console.log("unschedule success")
-                })
+                this.gamePlay.getComponent("Gameplay").unschedule(this.gamePlay.refreshEnemy);
                 break;
             }
         }

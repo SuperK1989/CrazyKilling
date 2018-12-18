@@ -7,7 +7,9 @@ cc.Class({
         btn_sound: {
             type: cc.AudioClip,
             default: null,
-        }
+        },
+
+        node_loading: cc.Node,
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -18,6 +20,7 @@ cc.Class({
         });
 
         SoundManager.loadSoundEffect("bgm1", true);
+
     },
 
     start() {
@@ -26,7 +29,10 @@ cc.Class({
 
     gameBegin() {
         cc.audioEngine.play(this.btn_sound, false)
-        cc.director.loadScene("MainScenes");
+        GlobalManager.getInstance.loadSpite();
+        this.node_loading.active = true;
+
+
     }
 
     // update (dt) {},
