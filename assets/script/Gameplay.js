@@ -169,6 +169,7 @@ cc.Class({
     },
 
     gameRestart() {
+        cc.director.resume();
         cc.director.loadScene("PlayerLogin");
         cc.audioEngine.stopAll();
     },
@@ -181,7 +182,8 @@ cc.Class({
                 this.nodePause.active = false;
                 this.nodeResume.active = true;
                 this.nodePauseBg.active = true;
-                this.stopMove(false);
+                cc.director.pause();
+                // this.stopMove(false);
                 break;
             }
 
@@ -191,7 +193,8 @@ cc.Class({
                 this.nodePause.active = true;
                 this.nodeResume.active = false;
                 this.nodePauseBg.active = false;
-                this.stopMove(true);
+                cc.director.resume();
+                // this.stopMove(true);
                 break;
             }
         }
@@ -299,10 +302,12 @@ cc.Class({
             scri.pauseFlag = control;
         }
 
-        var childrenEnCont = this.enemyRefresh.childrenCount;
-        for (let i = 0; i < childrenEnCont; i++) {
-            let scri = this.enemyRefresh.children[i].getComponent("Enemy")
-            scri.pauseFlag = control;
+        for (let k = 0; k < this.enemyRefresh.length; k++) {
+            var childrenEnCont = this.enemyRefresh[k].childrenCount;
+            for (let i = 0; i < childrenEnCont; i++) {
+                let scri = this.enemyRefresh[k].children[i].getComponent("Enemy")
+                scri.pauseFlag = control;
+            }
         }
     },
 

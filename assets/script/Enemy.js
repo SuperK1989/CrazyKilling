@@ -47,9 +47,17 @@ cc.Class({
 
     init(gamePlay, type, randomAreaNum) {
 
-        let enemyType = type - 1//sprite
-        let SpriteEnemy = GlobalManager.getInstance.enemySprite[enemyType];
+        let enemyType = type.toString();//sprite
+        let sprites = GlobalManager.getInstance.enemySprite
+
+        for (let i = 0; i < sprites.length; i++) {
+            if (sprites[i].name == enemyType)
+                var SpriteEnemy = sprites[i]
+        }
         this.sp_enemy.spriteFrame = SpriteEnemy;
+
+        if (type == 2)
+            this.node.scale = 0.5;
 
         let enemy = conf.enemyConfig[type]//enemy value
         this.areaNum = randomAreaNum;
@@ -60,6 +68,10 @@ cc.Class({
         this.node.runAction(fadeIn);
 
         this.gamePlay = gamePlay;
+        this.enemyType = type;
+        this.toChraPos = this.moveToChractor();
+        if (this.toChraPos.x < 0)
+            this.node.scaleX = -this.node.scaleX;
         this.visibalW = gamePlay.visibalW;
         this.visibalH = gamePlay.visibalH;
 
@@ -113,20 +125,43 @@ cc.Class({
             else
                 this.sp_enemy.enabled = true;
 
-            var charactor = this.gamePlay.nodePlayer;
-            var charactorPos = charactor.getPosition();
-            var turnWorldPos = charactor.parent.convertToWorldSpaceAR(charactorPos);
-            var turnPos = this.node.parent.convertToNodeSpaceAR(turnWorldPos);
-            var movePos = turnPos.sub(this.node.getPosition());
-            var handlePos = movePos.normalize();
+            this.enemyMove(this.enemyType);
 
-            this.node.x += handlePos.x * this.enemyspeed;
-            this.node.y += handlePos.y * this.enemyspeed;
+            if (enemyPos.y > 1500 || enemyPos.y < -750) {
+                this.putEnemyBackToPool(this.node)
+                this.node.active = false;
+            } else if (enemyPos.x > 2001 || enemyPos.x < -667) {
+                this.putEnemyBackToPool(this.node)
+                this.node.active = false;
+            }
 
         }
     },
 
-    enemyMove() {
+    enemyMove(type) {
+        switch (type) {
+            case 1: {
+                let handlePos = this.moveToChractor();
+                this.node.x += handlePos.x * this.enemyspeed;
+                this.node.y += handlePos.y * this.enemyspeed;
+                break;
+            }
 
+            case 2: {
+                this.node.x += this.toChraPos.x * this.enemyspeed;
+                this.node.y += this.toChraPos.y * this.enemyspeed;
+                break;
+            }
+        }
     },
+
+    moveToChractor() {
+        var charactor = this.gamePlay.nodePlayer;
+        var charactorPos = charactor.getPosition();
+        var turnWorldPos = charactor.parent.convertToWorldSpaceAR(charactorPos);
+        var turnPos = this.node.parent.convertToNodeSpaceAR(turnWorldPos);
+        var movePos = turnPos.sub(this.node.getPosition());
+        var handlePos = movePos.normalize();
+        return handlePos;
+    }
 });
