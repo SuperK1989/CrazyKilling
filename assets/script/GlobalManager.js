@@ -15,7 +15,7 @@ var GlobalManager = cc.Class({
             }
 
             self.enemySprite = Sprites;
-            console.log("load Sprite success");
+            console.log("load SpriteFrame success");
             cc.director.loadScene("MainScenes");
 
         })

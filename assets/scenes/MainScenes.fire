@@ -2678,7 +2678,7 @@
     },
     "prefabEnemy": [
       {
-        "__uuid__": "3cf41694-8e9c-4293-9724-ca8271752451"
+        "__uuid__": "91374a04-f10a-43ae-8634-0b52cdb96389"
       }
     ],
     "bulletPool": null,
@@ -2753,6 +2753,7 @@
     "enemyNum": 0,
     "visibalW": 0,
     "visibalH": 0,
+    "stage": 0,
     "_id": "dfhI4JfTFFzrxF0KVevgen"
   },
   {

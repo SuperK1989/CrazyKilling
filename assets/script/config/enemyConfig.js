@@ -4,7 +4,7 @@ module.exports = {
         speed: 1
     },
     [2]: {
-        blood: 50,
+        blood: 20,
         speed: 2
     }
 };

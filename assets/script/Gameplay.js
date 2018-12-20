@@ -38,11 +38,13 @@ cc.Class({
         playerSpeed: 1,
         playerMoveDir: cc.v2(0, 0),
         fireDir: cc.v2,
-        fireTemp: false,
+        fireTemp: true,
         enemyNum: 0,
 
         visibalW: 0,
         visibalH: 0,
+
+        stage: 0,
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -74,8 +76,8 @@ cc.Class({
         this.nodeFireArea.on("touchend", this.fireCtrl, this)
 
 
-        this.schedule(this.refreshEnemy, 1, cc.macro.REPEAT_FOREVER, 2)
-        this.schedule(this.openFire, 1)
+        this.schedule(this.refreshEnemy, 5, cc.macro.REPEAT_FOREVER, 5)
+        this.schedule(this.openFire, 0.5)
 
 
         this.playerScore.string = 0;
@@ -130,20 +132,40 @@ cc.Class({
         this.enemyPool.put(node);
     },
 
-    loadEnemy() {
+    loadEnemy(type) {
+
+        let randomAreaNum = 4 * Math.random();
+        randomAreaNum = Math.floor(randomAreaNum)
         let enemy = null;
         if (this.enemyPool.size() > 0) { // 通过 size 接口判断对象池中是否有空闲的对象
             enemy = this.enemyPool.get();
         } else { // 如果没有空闲对象，也就是对象池中备用对象不够时，我们就用 cc.instantiate 重新创建
-            enemy = cc.instantiate(this.prefabEnemy);
+            enemy = cc.instantiate(this.prefabEnemy[0]);
         }
-        enemy.parent = this.enemyRefresh; // 将生成的敌人加入节点树
-        enemy.getComponent('Enemy').init(this); //接下来就可以调用 enemy 身上的脚本进行初始化
+        enemy.parent = this.enemyRefresh[randomAreaNum]; // 将生成的敌人加入节点树
+        enemy.getComponent('Enemy').init(this, type, randomAreaNum); //接下来就可以调用 enemy 身上的脚本进行
+
     },
 
     refreshEnemy() {//type,num,config
-        let stageNum = conf.stageConfig;
-        console.log(stageNum);
+        this.stage += 1;
+        let stageNum = conf.stageConfig[this.stage];
+        let keys = Object.keys(conf.stageConfig)
+        if (stageNum == undefined) {
+            let stage = keys.length
+            stageNum = conf.stageConfig[stage]
+        }
+        let enemyGroup = stageNum.enemy;
+        for (let i = 0; i < enemyGroup.length; i++) {
+            this.fresh(enemyGroup[i].type, enemyGroup[i].num)
+        }
+    },
+
+    fresh(type, num) {
+        let self = this;
+        this.schedule(function () {
+            self.loadEnemy(type)
+        }, 2, num, 0)
     },
 
     gameRestart() {
@@ -221,6 +243,7 @@ cc.Class({
     fireCtrl(custom) {
         switch (custom.type) {
             case "touchstart": {
+                // this.nodePlayer.getComponent(cc.Sprite).spriteFrame
                 this.nodeFireBg.active = true;
                 let location = custom.getLocation();
                 let handleLo = this.nodeFireArea.convertToNodeSpaceAR(location);
@@ -255,7 +278,7 @@ cc.Class({
             case "touchend": {
                 this.nodeFireBg.active = false;
                 this.nodeFireStick.setPosition(0, 0);
-                this.fireTemp = false;
+                this.fireTemp = true;
                 break;
             }
         }
