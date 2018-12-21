@@ -28,8 +28,8 @@ cc.Class({
         this.node.opacity = 0;
         this.collision.enabled = true;
         this.boom.resetSystem();
-        let reFreshX = 667 * Math.random();
-        let reFreshY = 750 * Math.random();
+        let reFreshX = 333 * Math.random();
+        let reFreshY = 350 * Math.random();
         let randomPosition = cc.v2(reFreshX, reFreshY)
         this.node.setPosition(randomPosition);
     },

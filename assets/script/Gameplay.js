@@ -59,7 +59,10 @@ cc.Class({
             this.visibalW = visibalSize.width / 2;
             this.visibalH = visibalSize.height / 2;
         }
+
         this.scheduleOnce(func => {
+            this.visibalW = visibalSize.width / 2;
+            this.visibalH = visibalSize.height / 2;
             console.log("FrameSize:" + cc.view.getFrameSize())
             console.log("VisibleSize:" + cc.view.getVisibleSize())
         }, 3)
@@ -144,10 +147,10 @@ cc.Class({
         }
         enemy.parent = this.enemyRefresh[randomAreaNum]; // 将生成的敌人加入节点树
         enemy.getComponent('Enemy').init(this, type, randomAreaNum); //接下来就可以调用 enemy 身上的脚本进行
-        console.log("刷新区域:" + randomAreaNum, this.enemyRefresh[randomAreaNum].childrenCount)
+        // console.log("刷新区域:" + randomAreaNum, this.enemyRefresh[randomAreaNum].childrenCount)
     },
 
-    refreshEnemy() {//type,num,config
+    refreshEnemy() {//type,num,config  //刷新
         this.stage += 1;
         let stageNum = conf.stageConfig[this.stage];
         let keys = Object.keys(conf.stageConfig)
