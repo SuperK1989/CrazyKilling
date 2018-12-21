@@ -29,7 +29,8 @@ cc.Class({
 
     gameBegin() {
         cc.audioEngine.play(this.btn_sound, false)
-        GlobalManager.getInstance.loadSpite();
+        GlobalManager.getInstance.loadSprite();
+        GlobalManager.getInstance.loadAnimation();
         this.node_loading.active = true;
 
 

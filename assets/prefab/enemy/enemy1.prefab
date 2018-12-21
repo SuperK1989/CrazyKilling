@@ -31,10 +31,13 @@
       },
       {
         "__id__": 7
+      },
+      {
+        "__id__": 8
       }
     ],
     "_prefab": {
-      "__id__": 8
+      "__id__": 9
     },
     "_opacity": 255,
     "_color": {
@@ -297,6 +300,9 @@
     },
     "pauseFlag": true,
     "enemyType": null,
+    "areaNum": null,
+    "visibalW": 0,
+    "visibalH": 0,
     "enemyBlood": 10,
     "enemyspeed": 1,
     "_id": ""
@@ -320,6 +326,21 @@
       "width": 98,
       "height": 100
     },
+    "_id": ""
+  },
+  {
+    "__type__": "cc.Animation",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": true,
+    "_defaultClip": null,
+    "_clips": [
+      null
+    ],
+    "playOnLoad": true,
     "_id": ""
   },
   {

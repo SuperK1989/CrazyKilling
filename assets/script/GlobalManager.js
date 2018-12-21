@@ -2,11 +2,15 @@ var GlobalManager = cc.Class({
     properties: {
         getInstance: null,
 
+        loadSpr: 0,
+        loadAni: 0,
+
         enemySprite: [cc.Sprite],
+        enemyAni: [cc.AnimationClip],
 
     },
 
-    loadSpite() {
+    loadSprite() {
         let self = this
         cc.loader.loadResDir("enemy", cc.SpriteFrame, function (err, Sprites) {
             if (err !== null) {
@@ -14,14 +18,34 @@ var GlobalManager = cc.Class({
                 return;
             }
 
+
+
             self.enemySprite = Sprites;
+            self.loadSpr = 1;
             console.log("load SpriteFrame success");
-            cc.director.loadScene("MainScenes");
+            if (self.loadSpr == 1 && self.loadAni == 1)
+                cc.director.loadScene("MainScenes");
 
         })
     },
 
+    loadAnimation() {
+        let self = this;
+        cc.loader.loadResDir("enemy", cc.AnimationClip, function (err, AniClips) {
+            if (err !== null) {
+                console.log(err);
+                return;
+            }
 
+            self.enemyAni = AniClips;
+            console.log(self.enemyAni)
+            self.loadAni = 1;
+            console.log("load AnimationClips success");
+            if (self.loadSpr == 1 && self.loadAni == 1)
+                cc.director.loadScene("MainScenes");
+
+        })
+    },
 
 
 });

@@ -134,9 +134,9 @@ cc.Class({
 
     loadEnemy(type) {
 
-        let randomAreaNum = 4 * Math.random();
+        var randomAreaNum = 4 * Math.random();
         randomAreaNum = Math.floor(randomAreaNum)
-        let enemy = null;
+        var enemy = null;
         if (this.enemyPool.size() > 0) { // 通过 size 接口判断对象池中是否有空闲的对象
             enemy = this.enemyPool.get();
         } else { // 如果没有空闲对象，也就是对象池中备用对象不够时，我们就用 cc.instantiate 重新创建
@@ -144,7 +144,7 @@ cc.Class({
         }
         enemy.parent = this.enemyRefresh[randomAreaNum]; // 将生成的敌人加入节点树
         enemy.getComponent('Enemy').init(this, type, randomAreaNum); //接下来就可以调用 enemy 身上的脚本进行
-
+        console.log("刷新区域:" + randomAreaNum, this.enemyRefresh[randomAreaNum].childrenCount)
     },
 
     refreshEnemy() {//type,num,config

@@ -50,6 +50,7 @@ cc.Class({
         let enemyType = type.toString();//sprite
         let sprites = GlobalManager.getInstance.enemySprite
 
+
         for (let i = 0; i < sprites.length; i++) {
             if (sprites[i].name == enemyType)
                 var SpriteEnemy = sprites[i]
