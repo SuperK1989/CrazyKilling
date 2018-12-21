@@ -9,6 +9,7 @@ cc.Class({
         boom: cc.ParticleSystem,
         sp_enemy: cc.Sprite,
         nodeCollider: cc.Node,
+        aniEnemy: cc.Animation,
 
         pauseFlag: true,
         enemyType: null,
@@ -48,14 +49,31 @@ cc.Class({
     init(gamePlay, type, randomAreaNum) {
 
         let enemyType = type.toString();//sprite
-        let sprites = GlobalManager.getInstance.enemySprite
+        let sprites = GlobalManager.getInstance.enemySprite;
+        let anis = GlobalManager.getInstance.enemyAni;
 
-
-        for (let i = 0; i < sprites.length; i++) {
-            if (sprites[i].name == enemyType)
-                var SpriteEnemy = sprites[i]
+        for (let i = 0; i < sprites.length; i++) {//Sprite
+            if (sprites[i].name == enemyType) {
+                var spriteEnemy = sprites[i];
+                break;
+            }
         }
-        this.sp_enemy.spriteFrame = SpriteEnemy;
+
+        for (let i = 0; i < anis.length; i++) {//animetion
+            if (anis[i].name == enemyType) {
+                var aniEnemy = anis[i];
+                break;
+            }
+        }
+
+        if (aniEnemy) {
+
+            this.aniEnemy.addClip(aniEnemy);
+            this.aniEnemy.play(enemyType);
+        }
+        else
+            this.sp_enemy = spriteEnemy;
+
 
         if (type == 2)
             this.node.scale = 0.5;
