@@ -1,4 +1,4 @@
-var SoundManager = require('SoundManager')
+var SoundManager = require('./manager/SoundManager')
 
 cc.Class({
     extends: cc.Component,

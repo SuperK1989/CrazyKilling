@@ -1,6 +1,6 @@
-var SoundManager = require('SoundManager')
+var SoundManager = require('./manager/SoundManager')
 var conf = require('initConf')
-var GlobalManager = require('GlobalManager')
+var GlobalManager = require('./manager/GlobalManager')
 cc.Class({
     extends: cc.Component,
 

@@ -1,5 +1,5 @@
 var addAction = require('ObjAni')
-var SoundManager = require('SoundManager')
+var SoundManager = require('./manager/SoundManager')
 var conf = require('initConf')
 cc.Class({
     extends: cc.Component,
