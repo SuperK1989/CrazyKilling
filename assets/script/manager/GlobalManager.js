@@ -1,6 +1,7 @@
 var GlobalManager = cc.Class({
+
     properties: {
-        getInstance: null,
+        dataManager: null,
 
         loadSpr: 0,
         loadAni: 0,
@@ -8,6 +9,14 @@ var GlobalManager = cc.Class({
         enemySprite: [cc.Sprite],
         enemyAni: [cc.AnimationClip],
 
+    },
+
+    // ctor(dataManager) {
+    //     this.dataManager = dataManager;
+    // },
+
+    constructInit(dataManager) {
+        this.dataManager = dataManager;
     },
 
     loadSprite() {

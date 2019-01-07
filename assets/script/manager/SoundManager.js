@@ -2,17 +2,6 @@ var SoundManager = cc.Class({
     instance: null,
     audios: null,
 
-    // ctor() {
-    //     this.SoundMana = new SoundManager(this);
-    // },
-
-
-    // getInstance() {
-    //     if (this.instance == null)
-    //         this.instance = new SoundManager;
-    //     return this.instance;
-    // },
-
     loadSoundEffect(index, loop) {
         let self = this;
         if (this.audios == null) {

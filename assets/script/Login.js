@@ -1,6 +1,7 @@
 var SoundManager = require('./manager/SoundManager')
 var GlobalManager = require('./manager/GlobalManager')
-var DataManager = require("./manager/DataManager")
+var initData = require("./manager/InitData")
+var gData = require("./manager/InitData")
 cc.Class({
     extends: cc.Component,
 
@@ -9,6 +10,8 @@ cc.Class({
             type: cc.AudioClip,
             default: null,
         },
+
+        winLogin: cc.Node,
 
         userName: cc.EditBox,
         passWord: cc.EditBox,
@@ -23,10 +26,10 @@ cc.Class({
             cc.log("Next scene preloaded");
         });
 
-        console.log(cc.WinResMap)
+        this.scheduleOnce(callBack => {
+            SoundManager.loadSoundEffect("bgm1", true);
+        });
 
-        // HttpCorl.HttpPost('login/in', JSON.stringify("success!!"), this.LoginBack);
-        SoundManager.loadSoundEffect("bgm1", true);
 
     },
 
@@ -35,13 +38,31 @@ cc.Class({
     },
 
     playerLogin() {
+
         let uName = this.userName.string;
         let uPass = this.passWord.string;
-        console.group(uName, uPass)
+        console.log(uName, uPass)
+        var data = uName + "&" + uPass;
+        gData.DataManager.httpCorl.HttpPost('/login/in', JSON.stringify(data), this.LoginBack);
+
     },
 
-    LoginBack() {
-        console.log("loginBack");
+
+    LoginBack(interFaceHandle, status, responseText) {
+        console.log(interFaceHandle, status, responseText);
+        if (responseText == "success") {
+            let winLogin = cc.find("Canvas/Main Camera/bg/login")
+            winLogin.active = false;
+        }
+    },
+
+    signIn() {
+        initData.UIManager.winManager.openWin("SignIn");
+        this.scheduleOnce(callBack => {
+            let sign = cc.find("Canvas/Main Camera/bg").getChildByName("SignIn");
+            console.log(sign.getPosition());
+        }, 1)
+
     },
 
 
