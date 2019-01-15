@@ -2,7 +2,7 @@ var SoundManager = cc.Class({
     instance: null,
     audios: null,
 
-    loadSoundEffect(index, loop) {
+    loadSoundEffect() {
         let self = this;
         if (this.audios == null) {
             cc.loader.loadResDir("sound", cc.AudioClip, function (err, audioClips) {
@@ -10,15 +10,16 @@ var SoundManager = cc.Class({
                     console.log(err);
                     return;
                 }
-                else
-                    console.log("loadSoundFile success");
-                self.audios = audioClips
-                self.playSoundEffect(index, loop);
-            })
-        } else {
-            this.playSoundEffect(index, loop);
-        }
 
+                console.log("loadSoundFile success");
+                self.audios = audioClips
+                // self.playSoundEffect(index, loop);
+                onfire.fire("loadSoundFile success")
+            })
+            //  } else {
+            //     this.playSoundEffect(index, loop);
+            // }
+        }
 
     },
 

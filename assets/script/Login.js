@@ -1,6 +1,4 @@
 var SoundManager = require('./manager/SoundManager')
-var GlobalManager = require('./manager/GlobalManager')
-var initData = require("./manager/InitData")
 var gData = require("./manager/InitData")
 cc.Class({
     extends: cc.Component,
@@ -26,10 +24,15 @@ cc.Class({
             cc.log("Next scene preloaded");
         });
 
-        this.scheduleOnce(callBack => {
-            SoundManager.loadSoundEffect("bgm1", true);
-        });
+        SoundManager.loadSoundEffect();
 
+        onfire.onmsg("loadSoundFile success", function () {
+            SoundManager.playSoundEffect("bgm1", true);
+            console.log("playMusic")
+        }, this);
+        // this.scheduleOnce(callBack => {
+        //     SoundManager.loadSoundEffect("bgm1", true);
+        // }, 3);
 
     },
 
@@ -39,41 +42,45 @@ cc.Class({
 
     playerLogin() {
 
+        cc.audioEngine.play(this.btn_sound, false)
         let uName = this.userName.string;
         let uPass = this.passWord.string;
         console.log(uName, uPass)
         var data = uName + "&" + uPass;
-        gData.DataManager.httpCorl.HttpPost('/login/in', JSON.stringify(data), this.LoginBack);
+        gData.DataManager.httpCorl.HttpPost('/login', JSON.stringify(data), this.loginBack);
 
     },
 
 
-    LoginBack(interFaceHandle, status, responseText) {
+    loginBack(interFaceHandle, status, responseText) {
         console.log(interFaceHandle, status, responseText);
-        if (responseText == "success") {
+        if (responseText == "login successfully") {
+            gData.UIManager.tipsFly(responseText);
             let winLogin = cc.find("Canvas/Main Camera/bg/login")
             winLogin.active = false;
+            return;
         }
+
+        gData.UIManager.tipsFly(responseText);
     },
 
     signIn() {
-        initData.UIManager.winManager.openWin("SignIn");
-        this.scheduleOnce(callBack => {
-            let sign = cc.find("Canvas/Main Camera/bg").getChildByName("SignIn");
-            console.log(sign.getPosition());
-        }, 1)
+        cc.audioEngine.play(this.btn_sound, false)
+        gData.UIManager.winManager.openWin("SignIn");
 
     },
 
 
     gameBegin() {
         cc.audioEngine.play(this.btn_sound, false)
-        GlobalManager.getInstance.loadSprite();
-        GlobalManager.getInstance.loadAnimation();
+        gData.DataManager.GlobalManager.loadSprite();
+        gData.DataManager.GlobalManager.loadAnimation();
         this.node_loading.active = true;
 
 
-    }
+    },
+
+
 
     // update (dt) {},
 });

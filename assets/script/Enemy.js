@@ -1,6 +1,7 @@
 var SoundManager = require('./manager/SoundManager')
 var conf = require('initConf')
 var GlobalManager = require('./manager/GlobalManager')
+var gData = require("./manager/InitData")
 cc.Class({
     extends: cc.Component,
 
@@ -49,8 +50,8 @@ cc.Class({
     init(gamePlay, type, randomAreaNum) {
 
         let enemyType = type.toString();//sprite
-        let sprites = GlobalManager.getInstance.enemySprite;
-        let anis = GlobalManager.getInstance.enemyAni;
+        let sprites = gData.DataManager.GlobalManager.enemySprite;
+        let anis = gData.DataManager.GlobalManager.enemyAni;
 
         for (let i = 0; i < sprites.length; i++) {//Sprite
             if (sprites[i].name == enemyType) {

@@ -47,7 +47,6 @@ var GlobalManager = cc.Class({
             }
 
             self.enemyAni = AniClips;
-            console.log(self.enemyAni)
             self.loadAni = 1;
             console.log("load AnimationClips success");
             if (self.loadSpr == 1 && self.loadAni == 1)
@@ -59,5 +58,5 @@ var GlobalManager = cc.Class({
 
 });
 
-GlobalManager.getInstance = new GlobalManager;
+
 module.exports = GlobalManager;

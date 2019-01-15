@@ -39,7 +39,7 @@ var WinManager = cc.Class({
 
     openAction(node) {
         node.setPosition(2000, 0);
-        let action = cc.moveTo(0.5, 0, 0)//.easing(cc.easeBackOut());
+        let action = cc.moveTo(0.3, 0, 0)//.easing(cc.easeBackOut());
         node.runAction(action);
     },
 
