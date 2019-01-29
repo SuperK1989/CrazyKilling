@@ -11,10 +11,13 @@ cc.Class({
         sp_enemy: cc.Sprite,
         nodeCollider: cc.Node,
         aniEnemy: cc.Animation,
+        aniCoin: cc.Animation,
 
         pauseFlag: true,
         enemyType: null,
         areaNum: null,
+
+        coinChance: 0.5,
 
         visibalW: 0,
         visibalH: 0,
@@ -79,6 +82,7 @@ cc.Class({
         if (type == 2)
             this.node.scale = 0.5;
 
+
         let enemy = conf.enemyConfig[type]//enemy value
         this.areaNum = randomAreaNum;
         this.enemyBlood = enemy.blood;
@@ -107,7 +111,15 @@ cc.Class({
                     SoundManager.playSoundEffect("boom1", false);
                     this.node.stopAllActions();
                     this.collision.enabled = false;
-                    let fadeOut = cc.fadeOut(0.5);
+                    let fadeOut = cc.fadeOut(1);
+
+
+                    let randomTemp = Math.random();
+                    if (randomTemp < this.coinChance) {
+                        this.aniCoin.play("coin");//获得coin
+                        this.gamePlay.playerCoin.string = parseInt(this.gamePlay.playerCoin.string) + 10;
+                    }
+
                     this.node.runAction(fadeOut);
                     this.scheduleOnce(callBack => {
                         this.putEnemyBackToPool(this.node)
@@ -123,10 +135,30 @@ cc.Class({
                 this.gamePlay.nodeGameOver.active = true;
                 this.gamePlay.gameOverScore.string = this.gamePlay.playerScore.string;
                 this.gamePlay.getComponent("Gameplay").unschedule(this.gamePlay.refreshEnemy);
+
+                let playerScore = this.gamePlay.playerScore.string;
+                let playerGainCoin = this.gamePlay.playerCoin.string;
+
+                playerScore = parseInt(playerScore);
+                playerGainCoin = parseInt(playerGainCoin);
+
+                gData.DataManager.playerInfo.player_coin = playerGainCoin;
+                gData.DataManager.playerInfo.player_totalScore = playerScore > gData.DataManager.playerInfo.player_totalScore ? playerScore : gData.DataManager.playerInfo.player_totalScore;
+
+                let playerID = gData.DataManager.playerInfo.player_id;
+                let playerInfo = gData.DataManager.handlePlayerInfo();
+
+                let data = playerInfo + "#" + playerID + "@" + "player_coin=" + playerGainCoin + "&" + "player_scoreTotal=" + playerScore + "#" + gData.DataManager.token;
+
+                gData.DataManager.httpCorl.HttpPost('/updateInfo', JSON.stringify(data), this.updateInfo);
                 break;
             }
         }
 
+    },
+
+    updateInfo() {
+        console.log("update success");
     },
 
     putEnemyBackToPool(enemy) {

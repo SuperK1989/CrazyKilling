@@ -30,9 +30,6 @@ cc.Class({
             SoundManager.playSoundEffect("bgm1", true);
             console.log("playMusic")
         }, this);
-        // this.scheduleOnce(callBack => {
-        //     SoundManager.loadSoundEffect("bgm1", true);
-        // }, 3);
 
     },
 
@@ -41,12 +38,17 @@ cc.Class({
     },
 
     playerLogin() {
-
         cc.audioEngine.play(this.btn_sound, false)
         let uName = this.userName.string;
         let uPass = this.passWord.string;
-        console.log(uName, uPass)
-        var data = uName + "&" + uPass;
+        if (uName == "" || uPass == "" || uName.length < 5 || uPass.length < 5) {
+            gData.UIManager.tipsFly("invalid username or password");
+            return;
+        }
+
+
+
+        var data = uName + "@" + uPass;
         gData.DataManager.httpCorl.HttpPost('/login', JSON.stringify(data), this.loginBack);
 
     },
@@ -54,14 +56,33 @@ cc.Class({
 
     loginBack(interFaceHandle, status, responseText) {
         console.log(interFaceHandle, status, responseText);
-        if (responseText == "login successfully") {
+        let urlStr = responseText.toString();
+        if (urlStr.indexOf("&") == -1) {
             gData.UIManager.tipsFly(responseText);
-            let winLogin = cc.find("Canvas/Main Camera/bg/login")
+            return;
+        }
+
+        let handleUrl = urlStr.split("&");
+        let json = JSON.parse(handleUrl[1]);
+        let token = JSON.parse(handleUrl[2]);
+        if (handleUrl[0] == "login successfully") {
+            gData.UIManager.tipsFly(handleUrl[0]);
+            gData.DataManager.playerInfo = json;
+            gData.DataManager.token = token;
+            console.log(gData.DataManager.playerInfo);
+            let winLogin = cc.find("Canvas/Main Camera/bg/login");
+            let loginScri = cc.find("Canvas").getComponent("Login");
+            loginScri.saveUserLogInfo();
+
             winLogin.active = false;
+
+            if (gData.DataManager.playerInfo.player_name == '')
+                gData.UIManager.winManager.openWin("NickName");
             return;
         }
 
         gData.UIManager.tipsFly(responseText);
+
     },
 
     signIn() {
@@ -78,6 +99,16 @@ cc.Class({
         this.node_loading.active = true;
 
 
+    },
+
+    saveUserLogInfo() {
+        gData.DataManager.userName = this.userName.string;
+        gData.DataManager.passWord = this.passWord.string;
+    },
+
+    playerInfoWin() {
+        cc.audioEngine.play(this.btn_sound, false)
+        gData.UIManager.winManager.openWin("LevelWin");
     },
 
 

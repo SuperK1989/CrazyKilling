@@ -6,11 +6,22 @@ cc.Class({
     properties: {
         signInName: cc.EditBox,
         signInPass: cc.EditBox,
+        blackBg: cc.Button,
     },
 
     // LIFE-CYCLE CALLBACKS:
 
-    // onLoad () {},
+    // onLoad() {
+
+    // },
+
+    onEnable() {
+        this.blackBg.interactable = false;
+
+        this.scheduleOnce(callBack => {
+            this.blackBg.interactable = true;
+        }, 0.5)
+    },
 
     init(winManager) {
         this.winManager = winManager;
@@ -36,7 +47,6 @@ cc.Class({
     signInBack(interFaceHandle, status, responseText) {
         console.log(interFaceHandle, status, responseText);
         gData.UIManager.tipsFly(responseText);
-        console.log(responseText + "11111111")
     },
 
     // update (dt) {},

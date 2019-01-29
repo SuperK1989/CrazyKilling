@@ -1,6 +1,7 @@
 var addAction = require('ObjAni')
 var SoundManager = require('./manager/SoundManager')
 var conf = require('initConf')
+var gData = require("./manager/InitData")
 cc.Class({
     extends: cc.Component,
 
@@ -28,6 +29,7 @@ cc.Class({
         nodeCanvas: cc.Node,
         playerScore: cc.Label,
         gameOverScore: cc.Label,
+        playerCoin: cc.Label,
 
         btn_sound: {
             type: cc.AudioClip,
@@ -36,6 +38,7 @@ cc.Class({
 
         playerMove: false,
         playerSpeed: 1,
+        playerFireTime: 0.5,
         playerMoveDir: cc.v2(0, 0),
         fireDir: cc.v2,
         fireTemp: true,
@@ -80,9 +83,10 @@ cc.Class({
 
 
         this.schedule(this.refreshEnemy, 5, cc.macro.REPEAT_FOREVER, 5)
-        this.schedule(this.openFire, 0.5)
 
+        this.schedule(this.openFire, this.playerFireTime)
 
+        this.playerCoin.string = gData.DataManager.playerInfo.player_coin;
         this.playerScore.string = 0;
         this.gameOverScore.string = 0;
     },
@@ -172,9 +176,26 @@ cc.Class({
     },
 
     gameRestart() {
+        cc.audioEngine.play(this.btn_sound, false);
         cc.director.resume();
-        cc.director.loadScene("PlayerLogin");
-        cc.audioEngine.stopAll();
+        let data = gData.DataManager.handlePlayerInfo() + "#" + gData.DataManager.token;
+        gData.DataManager.httpCorl.HttpPost('/restart', JSON.stringify(data), this.restartBack);
+
+
+    },
+
+    restartBack(interFaceHandle, status, responseText) {
+        if (responseText == '') {
+            cc.director.loadScene("PlayerLogin", callFun => {
+                let winLogin = cc.find("Canvas/Main Camera/bg/login");
+                winLogin.active = false;
+
+            });
+        }
+        else {
+            gData.UIManager.tipsFly(responseText);
+            cc.director.loadScene("PlayerLogin");
+        }
     },
 
     gamePause(custom) {

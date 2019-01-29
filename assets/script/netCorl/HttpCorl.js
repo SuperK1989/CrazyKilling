@@ -4,11 +4,8 @@ var ClassHttp = cc.Class({
 
     properties: {
         dataManager: null,
+        cookie: [],
     },
-
-    // ctor(dataManager) {
-    //     this.dataManager = dataManager;
-    // },
 
     constructInit(dataManager) {
         this.dataManager = dataManager;
@@ -20,6 +17,7 @@ var ClassHttp = cc.Class({
         let httpXml = new XMLHttpRequest();
         httpXml.open("POST", url, true);
         httpXml.setRequestHeader("Content-Type", "application/json");
+        // httpXml.setRequestHeader("token", "");
 
         httpXml.onreadystatechange = function () {
             if (httpXml.readyState == 4 && (httpXml.status >= 200 && httpXml.status < 400)) {
