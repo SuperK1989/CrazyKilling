@@ -41,8 +41,8 @@
     },
     "_scale": {
       "__type__": "cc.Vec3",
-      "x": 0.49352083333333335,
-      "y": 0.49352083333333335,
+      "x": 0.49216666666666664,
+      "y": 0.49216666666666664,
       "z": 1
     },
     "_quat": {
@@ -1010,7 +1010,7 @@
     },
     "component": "",
     "_componentId": "0cb02Q2SJxKMYt1MUYomW0V",
-    "handler": "",
+    "handler": "rankWin",
     "customEventData": ""
   },
   {
@@ -2135,7 +2135,7 @@
       "b": 187,
       "a": 255
     },
-    "_N$maxLength": 8,
+    "_N$maxLength": 12,
     "_N$stayOnTop": false,
     "_id": "b3s105CTZByZMCfcUDd75e"
   },
@@ -2605,7 +2605,7 @@
       "b": 187,
       "a": 255
     },
-    "_N$maxLength": 8,
+    "_N$maxLength": 12,
     "_N$stayOnTop": false,
     "_id": "51Ui7ydANLOIkn9pfSihJz"
   },
@@ -2734,7 +2734,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 139.94,
+      "width": 121.5,
       "height": 48
     },
     "_anchorPoint": {
@@ -2780,8 +2780,8 @@
     "_srcBlendFactor": 1,
     "_dstBlendFactor": 771,
     "_useOriginalSize": true,
-    "_string": "Sign Up",
-    "_N$string": "Sign Up",
+    "_string": "Sign In",
+    "_N$string": "Sign In",
     "_fontSize": 40,
     "_lineHeight": 48,
     "_enableWrapText": true,
@@ -3022,7 +3022,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 122.28,
+      "width": 140.09,
       "height": 48
     },
     "_anchorPoint": {
@@ -3068,8 +3068,8 @@
     "_srcBlendFactor": 1,
     "_dstBlendFactor": 771,
     "_useOriginalSize": true,
-    "_string": "SIgn In",
-    "_N$string": "SIgn In",
+    "_string": "SIgn UP",
+    "_N$string": "SIgn UP",
     "_fontSize": 40,
     "_lineHeight": 48,
     "_enableWrapText": true,
@@ -3208,8 +3208,8 @@
     "target": {
       "__id__": 2
     },
-    "component": "Login",
-    "_componentId": "",
+    "component": "",
+    "_componentId": "0cb02Q2SJxKMYt1MUYomW0V",
     "handler": "signIn",
     "customEventData": ""
   },
@@ -3739,6 +3739,9 @@
     },
     "winLogin": {
       "__id__": 31
+    },
+    "tips": {
+      "__id__": 82
     },
     "userName": {
       "__id__": 47

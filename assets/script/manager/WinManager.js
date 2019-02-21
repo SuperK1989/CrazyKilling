@@ -17,8 +17,8 @@ var WinManager = cc.Class({
 
     openWin(winName) {
         for (let i in this.openedWin) {
-            if (this.openedWin[winName] == false) {
-                let winnode = cc.find("Canvas/Main Camera/bg/" + winName)
+            let winnode = cc.find("Canvas/Main Camera/bg/" + winName)
+            if (this.openedWin[winName] == false && winnode) {
                 this.openedWin[winName] = true;
                 winnode.active = true;
                 this.openAction(winnode);

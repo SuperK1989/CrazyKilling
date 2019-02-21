@@ -11,9 +11,9 @@ var GlobalManager = cc.Class({
 
     },
 
-    // ctor(dataManager) {
-    //     this.dataManager = dataManager;
-    // },
+    ctor(dataManager) {
+        this.dataManager = dataManager;
+    },
 
     constructInit(dataManager) {
         this.dataManager = dataManager;

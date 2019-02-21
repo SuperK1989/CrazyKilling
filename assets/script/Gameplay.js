@@ -82,18 +82,24 @@ cc.Class({
         this.nodeFireArea.on("touchend", this.fireCtrl, this)
 
 
-        this.schedule(this.refreshEnemy, 5, cc.macro.REPEAT_FOREVER, 5)
 
-        this.schedule(this.openFire, this.playerFireTime)
 
-        this.playerCoin.string = gData.DataManager.playerInfo.player_coin;
-        this.playerScore.string = 0;
-        this.gameOverScore.string = 0;
+
     },
 
     onEnable: function () {
+        cc.director.resume();
         cc.director.getCollisionManager().enabled = true;
+        let level = gData.DataManager.playerInfo.player_level;
+        this.playerCoin.string = gData.DataManager.playerInfo.player_coin;
+        this.playerSpeed = conf.levelConfig[level].speed;
+        this.playerFireTime = conf.levelConfig[level].fireSpeed;
+        this.playerScore.string = 0;
+        this.gameOverScore.string = 0;
 
+        this.schedule(this.refreshEnemy, 5, cc.macro.REPEAT_FOREVER, 5)//刷新怪物，5s后执行，每隔5s刷一次
+
+        this.schedule(this.openFire, this.playerFireTime)
     },
 
     start() {
@@ -177,15 +183,19 @@ cc.Class({
 
     gameRestart() {
         cc.audioEngine.play(this.btn_sound, false);
-        cc.director.resume();
         let data = gData.DataManager.handlePlayerInfo() + "#" + gData.DataManager.token;
         gData.DataManager.httpCorl.HttpPost('/restart', JSON.stringify(data), this.restartBack);
+        cc.director.loadScene("PlayerLogin", callFun => {
+            let winLogin = cc.find("Canvas/Main Camera/bg/login");
+            winLogin.active = false;
 
+        });
 
     },
 
     restartBack(interFaceHandle, status, responseText) {
         if (responseText == '') {
+            cc.director.resume();
             cc.director.loadScene("PlayerLogin", callFun => {
                 let winLogin = cc.find("Canvas/Main Camera/bg/login");
                 winLogin.active = false;
@@ -359,6 +369,7 @@ cc.Class({
                 this.nodePlayer.y = -this.visibalH;
             this.nodePlayer.x += this.playerMoveDir.x * this.playerSpeed;
             this.nodePlayer.y += this.playerMoveDir.y * this.playerSpeed;
+
         }
 
 

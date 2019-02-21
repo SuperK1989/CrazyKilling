@@ -39,6 +39,10 @@ cc.Class({
         this.winManager.closeWin(this.node.name);
         let uName = this.signInName.string;
         let uPass = this.signInPass.string;
+        if (uName == "" || uPass == "" || uName.length < 5 || uPass.length < 5 || uName.indexOf(' ') != -1 || uPass.indexOf(' ') != -1) {
+            gData.UIManager.tipsFly("invalid username or password");
+            return;
+        }
         console.log(uName, uPass)
         var data = uName + "&" + uPass;
         gData.DataManager.httpCorl.HttpPost('/signin', JSON.stringify(data), this.signInBack);

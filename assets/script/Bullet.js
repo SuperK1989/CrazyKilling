@@ -1,4 +1,6 @@
 var SoundManager = require('./manager/SoundManager')
+var gData = require("./manager/InitData")
+var conf = require('initConf')
 cc.Class({
     extends: cc.Component,
 
@@ -14,7 +16,9 @@ cc.Class({
     },
 
     onLoad() {
-
+        let level = 3;
+        gData.DataManager.playerInfo.player_level;
+        this.damage = conf.levelConfig[level].damage;
     },
 
     onEnable: function () {

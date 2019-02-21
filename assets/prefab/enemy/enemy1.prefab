@@ -432,10 +432,11 @@
     "pauseFlag": true,
     "enemyType": null,
     "areaNum": null,
+    "coinChance": 0.5,
     "visibalW": 0,
     "visibalH": 0,
     "enemyBlood": 10,
-    "enemyspeed": 1,
+    "enemySpeed": 1,
     "_id": ""
   },
   {

@@ -23,7 +23,7 @@ cc.Class({
         visibalH: 0,
 
         enemyBlood: 10,
-        enemyspeed: 1,
+        enemySpeed: 1,
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -112,6 +112,8 @@ cc.Class({
                     this.node.stopAllActions();
                     this.collision.enabled = false;
                     let fadeOut = cc.fadeOut(1);
+                    let num = this.gamePlay.playerScore.string
+                    this.gamePlay.playerScore.string = parseInt(num) + conf.enemyConfig[this.enemyType].score;
 
 
                     let randomTemp = Math.random();
@@ -143,7 +145,7 @@ cc.Class({
                 playerGainCoin = parseInt(playerGainCoin);
 
                 gData.DataManager.playerInfo.player_coin = playerGainCoin;
-                gData.DataManager.playerInfo.player_totalScore = playerScore > gData.DataManager.playerInfo.player_totalScore ? playerScore : gData.DataManager.playerInfo.player_totalScore;
+                gData.DataManager.playerInfo.player_scoreTotal = playerScore > gData.DataManager.playerInfo.player_scoreTotal ? playerScore : gData.DataManager.playerInfo.player_scoreTotal;
 
                 let playerID = gData.DataManager.playerInfo.player_id;
                 let playerInfo = gData.DataManager.handlePlayerInfo();
@@ -158,6 +160,7 @@ cc.Class({
     },
 
     updateInfo() {
+
         console.log("update success");
     },
 
@@ -194,14 +197,24 @@ cc.Class({
         switch (type) {
             case 1: {
                 let handlePos = this.moveToChractor();
-                this.node.x += handlePos.x * this.enemyspeed;
-                this.node.y += handlePos.y * this.enemyspeed;
+                this.node.x += handlePos.x * this.enemySpeed;
+                this.node.y += handlePos.y * this.enemySpeed;
+
                 break;
             }
 
             case 2: {
-                this.node.x += this.toChraPos.x * this.enemyspeed;
-                this.node.y += this.toChraPos.y * this.enemyspeed;
+                this.node.x += this.toChraPos.x * this.enemySpeed;
+                this.node.y += this.toChraPos.y * this.enemySpeed;
+
+                break;
+            }
+
+            case 3: {
+                let handlePos = this.moveToChractor();
+                this.node.x += this.toChraPos.x * this.enemySpeed;
+                this.node.y += this.toChraPos.y * this.enemySpeed;
+
                 break;
             }
         }

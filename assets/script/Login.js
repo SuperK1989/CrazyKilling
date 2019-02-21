@@ -10,6 +10,7 @@ cc.Class({
         },
 
         winLogin: cc.Node,
+        tips: cc.Node,
 
         userName: cc.EditBox,
         passWord: cc.EditBox,
@@ -31,6 +32,7 @@ cc.Class({
             console.log("playMusic")
         }, this);
 
+        this.tips.zIndex = cc.WinType.System;
     },
 
     start() {
@@ -41,7 +43,7 @@ cc.Class({
         cc.audioEngine.play(this.btn_sound, false)
         let uName = this.userName.string;
         let uPass = this.passWord.string;
-        if (uName == "" || uPass == "" || uName.length < 5 || uPass.length < 5) {
+        if (uName == "" || uPass == "" || uName.length < 5 || uPass.length < 5 || uName.indexOf(' ') != -1 || uPass.indexOf(' ') != -1) {
             gData.UIManager.tipsFly("invalid username or password");
             return;
         }
@@ -107,9 +109,14 @@ cc.Class({
     },
 
     playerInfoWin() {
-        cc.audioEngine.play(this.btn_sound, false)
+        cc.audioEngine.play(this.btn_sound, false);
         gData.UIManager.winManager.openWin("LevelWin");
     },
+
+    rankWin() {
+        cc.audioEngine.play(this.btn_sound, false);
+        gData.UIManager.winManager.openWin("RankWin");
+    }
 
 
 
